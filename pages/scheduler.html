@@ -1,0 +1,78 @@
+<html>
+<style>
+.error {
+  color:red;
+}
+/* SKONTATI KAKO PRISTUPITI CSS-U FULLCALENDAR*/
+.main_container {
+    margin: 10px 10px;
+
+}
+.scheduler_container {
+    width: 100%;
+    height: 98%;
+    border: 8px solid #F0640A;
+    background-color: #303030;
+    border-radius: 40px;
+    color: white;
+    padding: 10px;
+    margin: 0 auto;
+
+}
+
+.scheduler_title{
+    text-align: center;
+    letter-spacing: 3px;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 72px;
+    font-weight: bold;
+    color: white;
+}
+
+.scheduler_calendar {
+    width: 100%;
+    height: 90%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+</style>
+
+<head>
+
+<title>Microon - Scheduler</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+<link href="../css/styles.css" rel="stylesheet" />
+<link rel="stylesheet" href="../css/spapp.css">
+<script src="https://kit.fontawesome.com/45bb7d0eec.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+<div class="main_container">    
+    <div class="scheduler_container">
+        <div class="scheduler_button_and_title">
+            <h1 class="scheduler_title">Scheduler</h3>
+        </div>
+        <div class="scheduler_calendar" id='calendar'></div>
+    </div>
+</div>
+
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+<script src='../node_modules/fullcalendar/index.global.js'></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth'
+        });
+        calendar.render();
+      });
+</script>
+</html>

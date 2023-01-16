@@ -1,0 +1,218 @@
+<html>
+<style>
+.error {
+  color:red;
+}
+.main_container {
+    margin: 10px 10px;
+
+}
+.finances_container {
+    width: 100%;
+    height: 98%;
+    border: 8px solid #F0640A;
+    background-color: #303030;
+    border-radius: 40px;
+    color: white;
+    padding: 10px;
+    margin: 0 auto;
+
+}
+
+.finances_title{
+    text-align: center;
+    letter-spacing: 3px;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 72px;
+    font-weight: bold;
+    color: white;
+    padding-bottom: 30px;
+}
+
+.current_balance_container {
+    width: 18%;
+    height: 10%;
+    border: 4px solid #F0640A;
+    border-radius: 40px;
+    color: white;
+    padding: 10px;
+    margin: 0 auto;    
+}
+
+.current_balance_title {
+    text-align: center;
+    font-family:'Times New Roman', Times, serif;
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+}
+
+.current_balance_amount {
+    text-align: center;
+    font-family:'Times New Roman', Times, serif;
+    font-size: 25px;
+    font-weight: bold;
+    color: lightgreen;
+}
+
+.new_expense_button {
+    padding-left: 50px;
+    padding-top: 30px;
+    padding-bottom: 20px;
+}
+
+
+</style>
+
+<head>
+
+<title>Microon - Finances</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+<link href="../css/styles.css" rel="stylesheet" />
+<link rel="stylesheet" href="../css/spapp.css">
+<script src="https://kit.fontawesome.com/45bb7d0eec.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+<div class="main_container">    
+    <div class="finances_container">
+        <div class="finances_button_and_title">
+            <h1 class="finances_title">Finances</h3>
+        </div>
+        <div class="current_balance_container">
+            <h3 class="current_balance_title">Current Balance:</h3>
+            <p class="current_balance_amount">$1000.00</p>
+        </div>
+        <div class="new_expense_button">
+            <button type="button" class="btn btn-primary" data-toggle="modal" onClick="open_modal_add_income()">New Income</button>
+            <button type="button" class="btn btn-danger" data-toggle="modal" onClick="open_modal_add_expense()">New Expense</button>
+        </div>
+        <table class="table" style="width:50%">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Type of Expense</th>
+                <th scope="col">Name of Expense</th>
+                <th scope="col">Activity</th>
+                <th scope="col">Balance After Expense</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Food</td>
+                <td>Restaurant</td>
+                <td>-15.00</td>
+                <td>cifra nakon</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Bills</td>
+                <td>Water</td>
+                <td>-15.00</td>
+                <td>cifra nakon</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Other</td>
+                <td>PC game</td>
+                <td>-15.00</td>
+                <td>cifra nakon</td>
+              </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>Income</td>
+                <td>Salary</td>
+                <td>-15.00</td>
+                <td>cifra nakon</td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" id="test-income">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add a new income</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">Name</label>
+          <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="example: John Doe">
+        </div>
+        Type of income
+        <select class="form-select" aria-label="Default select example">
+          <option selected>Select the type of your income</option>
+          <option value="1">Salary</option>
+          <option value="2">Family</option>
+          <option value="3">Other</option>
+        </select>
+        Amount
+        <div class="input-group mb-3">
+          <span class="input-group-text">$</span>
+          <input type="text" class="form-control" aria-label="Income Amount">
+          <span class="input-group-text"></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="test-expense">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add a new expense</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">Name</label>
+          <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="example: John Doe">
+        </div>
+        Type of income
+        <select class="form-select" aria-label="Default select example">
+          <option selected>Select the type of your expense</option>
+          <option value="1">Food</option>
+          <option value="2">Bills</option>
+          <option value="3">Other</option>
+        </select>
+        Amount
+        <div class="input-group mb-3">
+          <span class="input-group-text">$</span>
+          <input type="text" class="form-control" aria-label="Income Amount">
+          <span class="input-group-text"></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+<script>
+function open_modal_add_income(){
+    $("#test-income").modal("toggle");
+  }
+
+function open_modal_add_expense(){
+  $("#test-expense").modal("toggle");
+}
+</script>
+</html>
