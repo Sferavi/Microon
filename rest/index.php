@@ -41,4 +41,9 @@ Flight::route('POST /notes', function () {
     Flight::notes_dao()->add($notes);
 });
 
+Flight::route('GET /my_notes', function () {
+    $my_notes = Flight::notes_dao()->get_all();
+    Flight::json($my_notes);
+});
+
 Flight::start();

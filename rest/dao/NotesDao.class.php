@@ -13,4 +13,9 @@ class NotesDao extends BaseDao
         $query = "SELECT * FROM notes WHERE id=:id";
         return @($this->execute_query($query, ['id' => $id]))[0];
     }
+    public function get_my_notes($user_id)
+    {
+        $query = "SELECT * FROM notes WHERE user_id=:user_id";
+        return @($this->execute_query($query, ['user_id' => $user_id]));
+    }
 }

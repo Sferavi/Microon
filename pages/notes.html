@@ -44,6 +44,18 @@
     opacity: 0.9;
 }
 
+.sticky_note_container {
+    width: 30%;
+    height: 100%;
+    border: 5px solid #F0640A;
+    background-color: white;
+    border-radius: 30px;
+    color: #F0640A;
+    margin-left: 30px;
+    margin-top: 30px;
+    cursor: pointer;
+}
+
 .notes_icon_and_text {
     text-align: center;
     padding-top: 60px;
@@ -97,9 +109,13 @@
                 <p class="notes_text">Add a new note</p>
             </div>
         </div> 
-        <div id="notes" class=
-            "row container-fluid"> 
-        </div> 
+        <div class="container">
+          <ul id="list_of_notes" class="notes_list">
+            <div class="row">
+              <div id="my_notes_list"></div>
+            </div>  
+          </ul>
+        </div>
     </div>
 </div>
 
@@ -123,7 +139,7 @@
         </div>
         <div class="modal-footer">
           <button id="close_notes_button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button id="add_notes_button" type="button" class="btn btn-primary">Add</button>
+          <button id="add_notes_button" type="submit" class="btn btn-primary">Add</button>
         </div>
       </form>
       </div>
@@ -136,6 +152,27 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
+
+get_notes();
+
+function get_notes() {
+  $.ajax({
+    url: "../rest/my_notes",
+    type: "GET",
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader('Authorization', 'Bearer ' +  localStorage.getItem("user_token"));
+    },
+    success: function( data ) {
+      document.getElementById('my_notes_list').innerHTML = "";
+      data.forEach(element => {
+        document.getElementById('my_notes_list').innerHTML+='<li class="sticky_note_list" id="note' + element.id + '"><div class="sticky_note_container"><div class="title_text">' + element.input_notes_title + '<div class= "notes_text">' + element.input_notes_text + '</div></div></div></li>';
+      });
+    },
+    error: function(){
+      toastr.error(error.responseText) 
+    }
+  });
+}
 
 function open_modal_add_notes(){
     $("#test-notes").modal("toggle");
@@ -158,10 +195,11 @@ $('#add_note_form').validate({
       success: function( data ) {
         toastr.success('Successfully added a note!');
        $('#test-notes').modal('toggle');
-        // get_my_recipes();
+       get_notes();
       },
       error: function(){
         toastr.error(error.responseText) 
+        console.log("data: ",data)
       }
     });
   }
