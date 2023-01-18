@@ -30,6 +30,7 @@
 }
 
 .add_new_note_container {
+    display: inline-block;
     width: 15%;
     height: 20%;
     border: 5px solid #F0640A;
@@ -45,15 +46,15 @@
 }
 
 .sticky_note_container {
-    width: 30%;
-    height: 100%;
+    display: inline-block;
+    width: 26%;
+    height: 220%;
     border: 5px solid #F0640A;
     background-color: white;
     border-radius: 30px;
     color: #F0640A;
     margin-left: 30px;
     margin-top: 30px;
-    cursor: pointer;
 }
 
 .notes_icon_and_text {
@@ -102,7 +103,7 @@
         <div class="notes_button_and_title">
           <i class="fa-sharp fa-solid fa-left-long"> BACK</i>
             <h1 class="notes_title">Notes</h1>
-        </div> 
+        </div>
         <div type="button" class="add_new_note_container" data-toggle="modal" onClick="open_modal_add_notes()">
             <div class="notes_icon_and_text">
                 <i class="fa-sharp fa-solid fa-circle-plus"></i>
@@ -110,12 +111,10 @@
             </div>
         </div> 
         <div class="container">
-          <ul id="list_of_notes" class="notes_list">
             <div class="row">
               <div id="my_notes_list"></div>
-            </div>  
-          </ul>
-        </div>
+            </div>
+        </div> 
     </div>
 </div>
 
@@ -165,7 +164,7 @@ function get_notes() {
     success: function( data ) {
       document.getElementById('my_notes_list').innerHTML = "";
       data.forEach(element => {
-        document.getElementById('my_notes_list').innerHTML+='<li class="sticky_note_list" id="note' + element.id + '"><div class="sticky_note_container"><div class="title_text">' + element.input_notes_title + '<div class= "notes_text">' + element.input_notes_text + '</div></div></div></li>';
+        document.getElementById('my_notes_list').innerHTML+='<div class="sticky_note_container"><div class="title_text">' + element.notes_title + '<div class= "notes_text">' + element.notes_text + '</div></div></div>';
       });
     },
     error: function(){
