@@ -37,15 +37,30 @@
 }
 
 .birthday_list_container {
+    overflow: hidden;
+    white-space: nowrap;
     width: 90%;
-    height: 15%;
+    height: 170px;
     border: 4px solid #F0640A;
     border-radius: 40px;
     color: white;
-    padding: 10px;
-    margin: 0 auto;    
+    margin: 0 auto; 
 }
 
+.btn-light {
+  background-color: #F0640A !important;
+  color: white !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  border-color: #303030 !important;
+}
+
+.birthday_image_container {
+    width: 10%;
+    height: inherit;
+    border: 4px solid #F0640A;
+    border-radius: 40px;
+    padding-right: 10px;
+}
 
 
 </style>
@@ -69,10 +84,12 @@
             <h1 class="birthday_title">Birthdays</h3>
         </div>
         <div class="add_birthday_button">
-            <button type="button" class="btn btn-light btn-lg" style="text-align:right;" data-toggle="modal" onClick="open_modal_add_birthday()">+ Add a new Birthday</button>   
+            <button type="button" class="btn btn-light btn-lg" style="text-align:right;" data-toggle="modal" onClick="open_modal_add_birthday()">+ Add a new birthday</button>   
         </div>
         <div class="birthday_list_container">
+          <div class="birthday_image_container">
 
+          </div>
         </div>    
     </div>
 </div>
