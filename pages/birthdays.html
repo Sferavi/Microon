@@ -44,7 +44,7 @@
     border: 4px solid #F0640A;
     border-radius: 40px;
     color: white;
-    margin: 0 auto; 
+    margin: 0 auto 20px auto;
 }
 
 .btn-light {
@@ -55,13 +55,25 @@
 }
 
 .birthday_image_container {
-    width: 10%;
-    height: inherit;
-    border: 4px solid #F0640A;
-    border-radius: 40px;
-    padding-right: 10px;
+  width: 10%;
+  height: inherit;
+  border-right: 4px solid #F0640A;
+  border-radius: 40px;
+  padding-right: 10px;
 }
 
+.birthday_person_information {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 40px;
+  font-weight: bold;
+  color: white;
+  height: inherit;
+  text-align: center;
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  padding-left: 250px;
+}
 
 </style>
 
@@ -70,9 +82,12 @@
 <title>Microon - Birthdays</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" />
 <link href="../css/styles.css" rel="stylesheet" />
 <link rel="stylesheet" href="../css/spapp.css">
 <script src="https://kit.fontawesome.com/45bb7d0eec.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css">
 
 </head>
 
@@ -86,49 +101,221 @@
         <div class="add_birthday_button">
             <button type="button" class="btn btn-light btn-lg" style="text-align:right;" data-toggle="modal" onClick="open_modal_add_birthday()">+ Add a new birthday</button>   
         </div>
-        <div class="birthday_list_container">
-          <div class="birthday_image_container">
-
-          </div>
-        </div>    
+        <div id="my_birthdays_list"></div>
     </div>
 </div>
 
 <div class="modal" tabindex="-1" id="test-birthday">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
+       <form id="add_birthday_form">
         <div class="modal-header">
           <h5 class="modal-title">Add a new birthday</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <label class="form-label">Person's picture</label>
           <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupFile01">Upload</label>
-            <input type="file" class="form-control" id="inputGroupFile01">
+            <label class="input-group-text" for="birthday_person_picture">Upload</label>
+            <input type="file" name="person_photo" class="form-control" id="birthday_person_picture">
           </div>
           <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Name</label>
-            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="example: John Doe">
+            <label for="birthday_person_name" class="form-label">Name</label>
+            <input type="text" name="person_name" class="form-control" id="birthday_person_name" placeholder="example: John Doe">
+          </div>
+          <label class="form-label">Person's birthday</label>
+          <div class="mb-3 input-group fetched-date">
+            <input type="text" name="person_date" class="form-control" placeholder="format: month/day/year">
+            <div class="input-group-addon">
+              <i class="fa-sharp fa-solid fa-calendar-days" style="font-size: 25px; padding-left: 10px; padding-top: 7px;"></i>
+            </div>
           </div>
           <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Note Title</label>
-            <input type="email" class="form-control" id="exampleFormControlInput2" placeholder="name@example.com">
+            <label for="birthday_person_gift" class="form-label">Gift this person might like</label>
+            <input type="text" name="person_gift" class="form-control" id="birthday_person_gift" placeholder="example: Neklace">
+          </div>
+          <div class="mb-3">
+          <label class="form-label">Affiliation with the person</label>
+            <select name="person_affiliation" class="form-select" aria-label="Default select example"> 
+              <option selected>Choose from one of the options</option>
+              <option value="Best Friend">Best Friend</option>
+              <option value="Friend">Friend</option>
+              <option value="Family">Family</option>
+              <option value="Business Colleague">Business Colleague</option>
+            </select>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
         </div>
+      </form>
       </div>
     </div>
   </div>
+
+  <div class="modal" tabindex="-1" id="edit-test-birthday">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+       <form id="edit_birthday_form">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit a birthday</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input style="display:none" name="birthday_id">
+          <label class="form-label">Person's picture</label>
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="birthday_person_picture">Upload</label>
+            <input type="file" name="person_photo" class="form-control" id="birthday_person_picture">
+          </div>
+          <div class="mb-3">
+            <label for="birthday_person_name" class="form-label">Name</label>
+            <input type="text" name="person_name" class="form-control" id="birthday_person_name" placeholder="example: John Doe">
+          </div>
+          <label class="form-label">Person's birthday</label>
+          <div class="mb-3 input-group fetched-date">
+            <input type="text" name="person_date" class="form-control" placeholder="format: month/day/year">
+            <div class="input-group-addon">
+              <i class="fa-sharp fa-solid fa-calendar-days" style="font-size: 25px; padding-left: 10px; padding-top: 7px;"></i>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="birthday_person_gift" class="form-label">Gift this person might like</label>
+            <input type="text" name="person_gift" class="form-control" id="birthday_person_gift" placeholder="example: Neklace">
+          </div>
+          <div class="mb-3">
+          <label class="form-label">Affiliation with the person</label>
+            <select name="person_affiliation" class="form-select" aria-label="Default select example"> 
+              <option selected>Choose from one of the options</option>
+              <option value="Best Friend">Best Friend</option>
+              <option value="Friend">Friend</option>
+              <option value="Family">Family</option>
+              <option value="Business Colleague">Business Colleague</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
+
+get_birthdays();
+
+function get_birthdays() {
+  $.ajax({
+    url: "../rest/my_birthdays",
+    type: "GET",
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader('Authorization', 'Bearer ' +  localStorage.getItem("user_token"));
+    },
+    success: function( data ) {
+      document.getElementById('my_birthdays_list').innerHTML = "";
+      data.forEach(element => {
+        document.getElementById('my_birthdays_list').innerHTML+='<div class="birthday_list_container"><div class="birthday_image_container">' + element.person_photo + '<div class="birthday_person_information"><div class="person_name" style="padding-top: 50px;">' + element.person_name + '</div><div class="person_birthday" style="padding-right: 200px; padding-left: 200px; padding-top: 50px;">' + element.person_date + '</div><div class="person_gift" style="padding-right: 200px; padding-top: 50px;">' + element.person_gift + '</div><div class="person_affiliation" style="padding-top: 50px;">' + element.person_affiliation + '</div><div class="edit_button"><button type="button" class="btn btn-light" style="margin-top: 59px; margin-left: 300px;" onclick="open_modal_edit_birthday(' + element.id + ')">Edit</button></div><div class="edit_button"><button type="button" class="btn btn-outline-danger" style="margin-top: 59px; margin-left: 10px;">Delete</button></div></div></div></div></div></div>'
+            
+      });
+    },
+    error: function(){
+      toastr.error(error.responseText) 
+    }
+  });
+}
+
 function open_modal_add_birthday(){
     $("#test-birthday").modal("toggle");
   }
+ 
+
+  //ADDING BIRTHDAYS
+  $('#add_birthday_form').validate({
+  submitHandler: function(form) {
+    var birthdays = {
+    person_photo: $('#add_birthday_form input[name="person_photo"]').val(),
+    person_name: $('#add_birthday_form input[name="person_name"]').val(),
+    person_date: $('#add_birthday_form input[name="person_date"]').val(),
+    person_gift: $('#add_birthday_form input[name="person_gift"]').val(),
+    person_affiliation: $('#add_birthday_form select[name="person_affiliation"]').val()
+  }
+
+    $.ajax({
+      url: "../rest/birthdays",
+      type: "POST",
+      data: birthdays,
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('Authorization', 'Bearer ' +  localStorage.getItem("user_token"));
+      },
+      success: function( data ) {
+        toastr.success('Successfully added a birthday!');
+       $('#test-birthday').modal('toggle');
+       get_birthdays();
+      },
+      error: function(){
+        toastr.error(error.responseText)
+      }
+    });
+  }
+});
+
+//EDITING BIRTHDAYS
+function open_modal_edit_birthday(i) {
+  $.get( "../rest/birthday/" + i, null ).done(function(data) {
+    $("#edit-test-birthday").modal('toggle');
+    $('#edit_birthday_form input[name="birthday_id"]').val(data.id);
+    $('#edit_birthday_form input[name="person_photo"]').val(data.person_photo);
+    $('#edit_birthday_form input[name="person_name"]').val(data.person_name);
+    $('#edit_birthday_form input[name="person_date"]').val(data.person_date);
+    $('#edit_birthday_form input[name="person_gift"]').val(data.person_gift);
+    $('#edit_birthday_form select[name="person_affiliation"]').val(data.person_affiliation);
+  }).fail(function(error) {
+    toastr.error(error.responseText) 
+  });
+}
+
+$('#edit_birthday_form').validate({
+  submitHandler: function(form) {
+    var birthday = {
+      id: $('#edit_birthday_form input[name="birthday_id"]').val(),
+      person_photo: $('#edit_birthday_form input[name="person_photo"]').val(),
+      person_name: $('#edit_birthday_form input[name="person_name"]').val(),
+      person_date: $('#edit_birthday_form input[name="person_date"]').val(),
+      person_gift: $('#edit_birthday_form input[name="person_gift"]').val(),
+      person_affiliation: $('#edit_birthday_form select[name="person_affiliation"]').val()
+    }
+          if (person_name != "" && person_date != "" && person_gift != "" && person_affiliation != "") {
+            $.post( "../rest/birthday/" + birthday.id, birthday ).done(function(data) {
+            toastr.success('Birthday edited successfully');
+            $('#edit-test-birthday').modal('toggle');
+            get_birthdays();
+            }).fail(function(error) {
+              toastr.error(error.responseText) 
+            });
+      } else {
+        toastr.error("All required fields are not filled");
+      }
+}
+});
+
+  $(function() {
+  $('.fetched-date input').datepicker({
+    calendarWeeks: true,
+    todayHighlight: true,
+    autoclose: true
+  });
+});
+
 </script>
 </html>
