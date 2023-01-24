@@ -68,4 +68,8 @@ Flight::route('GET /birthday/@id', function ($id) {
     Flight::json($birthday);
 });
 
+Flight::route('DELETE /birthday/@id', function ($id) {
+    Flight::birthdays_dao()->delete_birthday($id);
+});
+
 Flight::start();

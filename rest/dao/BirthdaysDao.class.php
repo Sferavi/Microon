@@ -8,16 +8,19 @@ class BirthdaysDao extends BaseDao
     {
         parent::__construct('birthdays');
     }
+
     public function get_birthdays_by_id($id)
     {
         $query = "SELECT * FROM birthdays WHERE id=:id";
         return @($this->execute_query($query, ['id' => $id]))[0];
     }
+
     public function get_my_birthdays($user_id)
     {
         $query = "SELECT * FROM birthdays WHERE user_id=:user_id";
         return @($this->execute_query($query, ['user_id' => $user_id]));
     }
+
     public function update_birthday($birthday, $birthday_id)
     {
         $entity[':id'] = $birthday_id;
@@ -28,5 +31,11 @@ class BirthdaysDao extends BaseDao
         }
         $query = rtrim($query, ', ') . ' WHERE id=:id';
         return $this->update($entity, $query);
+    }
+
+    public function delete_birthday($id)
+    {
+        $query = "DELETE FROM birthdays WHERE id =:id";
+        return $this->execute_query1($query, ['id' => $id]);
     }
 }

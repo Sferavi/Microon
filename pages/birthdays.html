@@ -154,7 +154,7 @@
     </div>
   </div>
 
-  <div class="modal" tabindex="-1" id="edit-test-birthday">
+  <div class="modal fade" tabindex="-1" id="edit-test-birthday">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
        <form id="edit_birthday_form">
@@ -204,11 +204,32 @@
     </div>
   </div>
 
+  <div class="modal fade" id="delete-birthday-modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="delete-birthday-form">
+          <div class="modal-header" style="text-align: center;">
+            <h5 class="modal-title">Delete Birthday</h5>
+            <input style="display:none" name="birthday_id">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p style="font-size: 18px;">Are you sure?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </div>
+      </form>
+      </div>
+    </div>
+  </div>
+
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
@@ -225,7 +246,7 @@ function get_birthdays() {
     success: function( data ) {
       document.getElementById('my_birthdays_list').innerHTML = "";
       data.forEach(element => {
-        document.getElementById('my_birthdays_list').innerHTML+='<div class="birthday_list_container"><div class="birthday_image_container">' + element.person_photo + '<div class="birthday_person_information"><div class="person_name" style="padding-top: 50px;">' + element.person_name + '</div><div class="person_birthday" style="padding-right: 200px; padding-left: 200px; padding-top: 50px;">' + element.person_date + '</div><div class="person_gift" style="padding-right: 200px; padding-top: 50px;">' + element.person_gift + '</div><div class="person_affiliation" style="padding-top: 50px;">' + element.person_affiliation + '</div><div class="edit_button"><button type="button" class="btn btn-light" style="margin-top: 59px; margin-left: 300px;" onclick="open_modal_edit_birthday(' + element.id + ')">Edit</button></div><div class="edit_button"><button type="button" class="btn btn-outline-danger" style="margin-top: 59px; margin-left: 10px;">Delete</button></div></div></div></div></div></div>'
+        document.getElementById('my_birthdays_list').innerHTML+='<div class="birthday_list_container"><div class="birthday_image_container">' + element.person_photo + '<div class="birthday_person_information"><div class="person_name" style="padding-top: 50px;">' + element.person_name + '</div><div class="person_birthday" style="padding-right: 200px; padding-left: 200px; padding-top: 50px;">' + element.person_date + '</div><div class="person_gift" style="padding-right: 200px; padding-top: 50px;">' + element.person_gift + '</div><div class="person_affiliation" style="padding-top: 50px;">' + element.person_affiliation + '</div><div class="edit_button"><button type="button" class="btn btn-light" style="margin-top: 59px; margin-left: 300px;" onclick="open_modal_edit_birthday(' + element.id + ')">Edit</button></div><div class="edit_button"><button type="button" class="btn btn-outline-danger" onclick="open_modal_delete_birthday(' + element.id + ')" style="margin-top: 59px; margin-left: 10px;">Delete</button></div></div></div></div></div></div>'
             
       });
     },
@@ -295,7 +316,7 @@ $('#edit_birthday_form').validate({
       person_gift: $('#edit_birthday_form input[name="person_gift"]').val(),
       person_affiliation: $('#edit_birthday_form select[name="person_affiliation"]').val()
     }
-          if (person_name != "" && person_date != "" && person_gift != "" && person_affiliation != "") {
+          if (birthday.person_name != "" && birthday.person_date != "" && birthday.person_gift != "" && birthday.person_affiliation != "") {
             $.post( "../rest/birthday/" + birthday.id, birthday ).done(function(data) {
             toastr.success('Birthday edited successfully');
             $('#edit-test-birthday').modal('toggle');
@@ -307,6 +328,31 @@ $('#edit_birthday_form').validate({
         toastr.error("All required fields are not filled");
       }
 }
+});
+
+//DELETE BIRTHDAY
+function open_modal_delete_birthday(id) {
+  $("#delete-birthday-modal").modal('show');
+  $('#delete-birthday-form input[name="birthday_id"]').val(id);
+}
+
+$('#delete-birthday-form').validate({
+  submitHandler: function(form) {
+    var birthday_id =  $('#delete-birthday-form input[name="birthday_id"]').val();
+  
+    $.ajax({
+          url: '../rest/birthday/'+birthday_id,
+          method: 'DELETE',
+          success: function(result) {
+              toastr.success('Birthday has been deleted');
+              get_birthdays();
+          },
+          error: function(){
+            toastr.success('Error occured while trying to delete a birthday');
+          }
+      });
+  $("#delete-birthday-modal").modal('hide');
+  }
 });
 
   $(function() {
