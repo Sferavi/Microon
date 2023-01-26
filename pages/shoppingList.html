@@ -39,6 +39,84 @@
 
 .shopping_list_priority_buttons {
     padding-left: 20px;
+    float: right;
+}
+
+.shopping_list_priority_text {
+    text-align: right;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.add_to_shopping_list_container {
+    width: 100%;
+    height: 70%;
+    border: 3px solid #F0640A;
+    background-color: #303030;
+    border-radius: 40px;
+    color: white;
+    margin-top: 100px;
+    margin-left: 60px;
+    overflow: hidden;
+}
+
+.add_container_title {
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-bottom: 4px solid #F0640A;
+    background-color: #F0640A;
+
+}
+
+.item_name_section {
+    text-align: center; 
+    font-family: Arial, Helvetica, sans-serif; 
+    font-size: 20px;
+    padding-top: 10px;
+}
+
+.brand_name_section {
+    text-align: center; 
+    font-family: Arial, Helvetica, sans-serif; 
+    font-size: 20px;
+    padding-top: 10px;
+}
+
+.quantity_section {
+    text-align: center; 
+    font-family: Arial, Helvetica, sans-serif; 
+    font-size: 20px;
+    padding-top: 10px;
+}
+
+.item_priority_section {
+    text-align: center; 
+    font-family: Arial, Helvetica, sans-serif; 
+    font-size: 20px;
+    padding-top: 10px;
+}
+
+.store_name_section {
+    text-align: center; 
+    font-family: Arial, Helvetica, sans-serif; 
+    font-size: 20px;
+    padding-top: 10px;
+}
+
+.add_item {
+    text-align: center;
+    padding-top: 20px;
+}
+
+.btn-light {
+  background-color: #F0640A !important;
+  color: white !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  border-color: #303030 !important;
+}
+
+::placeholder {
+   text-align: center; 
 }
 
 </style>
@@ -59,7 +137,7 @@
 <div class="main_container">    
     <div class="shopping_list_container">
         <div class="shopping_list_button_and_title">
-            <h1 class="shopping_list_title">Shopping List</h3>
+            <h1 class="shopping_list_title">Shopping List</h1>
         </div>
         <p class="shopping_list_priority_text">See items by priority:</p>  
         <div class="shopping_list_priority_buttons">
@@ -67,6 +145,49 @@
             <button type="button" class="btn btn-danger">High Priority</button>
             <button type="button" class="btn btn-warning">Medium Priority</button>
             <button type="button" class="btn btn-success">Low Priority</button>
+        </div>
+        <div class="col-3 add_to_shopping_list_container">
+            <h3 class="add_container_title">ADD NEW ITEM</h3>
+            <form id="add_items_form">
+                <div class="mb-3 item_name_section">
+                    <label for="item_name" class="form-label">Item Name</label>
+                    <input type="text" class="form-control form-control-lg" id="item_name" placeholder="e.g. Toothpaste" style="width: 80%; margin-left: 50px;">
+                </div>
+                <div class="mb-3 brand_name_section">
+                    <label for="brand_name" class="form-label">Brand Name</label>
+                    <input type="text" class="form-control form-control-lg" id="brand_name" placeholder="e.g. Colgate" style="width: 80%; margin-left: 50px;">
+                </div>
+                <h3 class="quantity_section">Quantity and Unit</h3>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control-lg" placeholder="e.g. 3" aria-label="Text input with dropdown button" style="width: 50%; margin-left: 50px;">
+                    <label for="unit_select" class="form-label"></label>
+                    <select type="text" id="unit_select" class="form-select" style="margin-right: 60px; margin-left: 20px; margin-top: 3px; height: 45px;">
+                      <option selected>Choose...</option>
+                      <option value="piece/s">piece/s</option>
+                      <option value="kg">kg</option>
+                      <option value="g">g</option>
+                      <option value="l">l</option>
+                      <option value="pair">pair</option>
+                    </select>
+                </div>
+                <div class="mb-3 item_priority_section">
+                    <label for="priority_select" class="form-label">Item Buying Priority</label>
+                    <select type="text" id="priority_select" class="form-select" style="width: 80%; margin-left: 50px; height: 45px;">
+                        <option selected style="text-align: center;">Choose item priority</option>
+                        <option value="High Priority" style="text-align: center;">High Priority</option>
+                        <option value="Medium Priority" style="text-align: center;">Medium Priority</option>
+                        <option value="Low Priority" style="text-align: center;">Low Priority</option>
+                    </select>
+                </div>
+                <div class="mb-3 store_name_section">
+                    <label for="store_name" class="form-label">Prefered Store To Buy The Item</label>
+                    <input type="text" class="form-control form-control-lg" id="store_name" placeholder="e.g. Bingo" style="width: 80%; margin-left: 50px;">
+                </div>
+                <div class="add_item">
+                    <button type="button" class="btn btn-light btn-lg" style="text-align:right;">Add Item</button>   
+                </div>
+            </form>
+    
         </div>
     </div>
 </div>
