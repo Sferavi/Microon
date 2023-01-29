@@ -9,10 +9,12 @@ require_once('config.php');
 require_once('dao/UsersDao.class.php');
 require_once('dao/NotesDao.class.php');
 require_once('dao/BirthdaysDao.class.php');
+require_once('dao/ShoppingListDao.class.php');
 
 Flight::register('user_dao', 'UsersDao');
 Flight::register('notes_dao', 'NotesDao');
 Flight::register('birthdays_dao', 'BirthdaysDao');
+Flight::register('shopping_list_dao', 'ShoppingListDao');
 
 Flight::route('POST /users', function () {
     $user = Flight::request()->data->getData();
@@ -48,6 +50,11 @@ Flight::route('POST /birthdays', function () {
     Flight::birthdays_dao()->add($birthdays);
 });
 
+Flight::route('POST /shopping_item', function () {
+    $shopping_item            = Flight::request()->data->getData();
+    Flight::shopping_list_dao()->add($shopping_item);
+});
+
 Flight::route('POST /birthday/@id', function ($id) {
     $birthdays = Flight::request()->data->getData();
     Flight::birthdays_dao()->update_birthday($birthdays, $id);
@@ -61,6 +68,12 @@ Flight::route('GET /my_notes', function () {
 Flight::route('GET /my_birthdays', function () {
     $my_birthdays = Flight::birthdays_dao()->get_all();
     Flight::json($my_birthdays);
+});
+
+Flight::route('GET /shopping_list', function()
+{
+  $shopping_list = Flight::shopping_list_dao()->get_all();
+  Flight::json($shopping_list);
 });
 
 Flight::route('GET /birthday/@id', function ($id) {
