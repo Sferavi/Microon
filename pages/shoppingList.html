@@ -182,17 +182,17 @@
             <form id="add_items_form">
                 <div class="mb-3 item_name_section">
                     <label for="item_name" class="form-label">Item Name</label>
-                    <input type="text" class="form-control form-control-lg" id="item_name" placeholder="e.g. Toothpaste" style="width: 80%; margin-left: 50px;">
+                    <input type="text" name="item_name" class="form-control form-control-lg" id="item_name" placeholder="e.g. Toothpaste" style="width: 80%; margin-left: 50px;">
                 </div>
                 <div class="mb-3 brand_name_section">
                     <label for="brand_name" class="form-label">Brand Name</label>
-                    <input type="text" class="form-control form-control-lg" id="brand_name" placeholder="e.g. Colgate" style="width: 80%; margin-left: 50px;">
+                    <input type="text" name="brand_name" class="form-control form-control-lg" id="brand_name" placeholder="e.g. Colgate" style="width: 80%; margin-left: 50px;">
                 </div>
                 <h3 class="quantity_section">Quantity and Unit</h3>
                 <div class="input-group mb-3">
-                    <input type="text" id="quantity" class="form-control-lg" placeholder="e.g. 3" aria-label="Text input with dropdown button" style="width: 50%; margin-left: 50px;">
+                    <input type="text" id="quantity" name="quantity" class="form-control-lg" placeholder="e.g. 3" aria-label="Text input with dropdown button" style="width: 50%; margin-left: 50px;">
                     <label for="unit_select" class="form-label"></label>
-                    <select type="text" id="unit_select" class="form-select" style="margin-right: 60px; margin-left: 20px; margin-top: 3px; height: 45px;">
+                    <select type="text" id="unit_select" name="unit_select" class="form-select" style="margin-right: 60px; margin-left: 20px; margin-top: 3px; height: 45px;">
                       <option selected>Choose...</option>
                       <option value="piece/s">piece/s</option>
                       <option value="kg">kg</option>
@@ -203,7 +203,7 @@
                 </div>
                 <div class="mb-3 item_priority_section">
                     <label for="priority" class="form-label">Item Buying Priority</label>
-                    <select type="text" id="priority" class="form-select" style="width: 80%; margin-left: 50px; height: 45px;">
+                    <select type="text" id="priority" name="priority" class="form-select" style="width: 80%; margin-left: 50px; height: 45px;">
                         <option selected style="text-align: center;">Choose item priority</option>
                         <option value="High Priority" style="text-align: center;">High Priority</option>
                         <option value="Medium Priority" style="text-align: center;">Medium Priority</option>
@@ -212,7 +212,7 @@
                 </div>
                 <div class="mb-3 store_name_section">
                     <label for="store_name" class="form-label">Prefered Store To Buy The Item</label>
-                    <input type="text" class="form-control form-control-lg" id="store_name" placeholder="e.g. Bingo" style="width: 80%; margin-left: 50px;">
+                    <input type="text" name="store_name" class="form-control form-control-lg" id="store_name" placeholder="e.g. Bingo" style="width: 80%; margin-left: 50px;">
                 </div>
                 <div class="add_item">
                     <button type="submit" class="btn btn-light btn-lg" style="text-align:right;">Add Item</button>   
@@ -292,7 +292,7 @@ $('#add_items_form').validate({
     var shopping_item = {
       item_name: $('#add_items_form input[name="item_name"]').val(),
       brand_name: $('#add_items_form input[name="brand_name"]').val(),
-      quantity: $('#add_items_form input[name="quantity"]').val() + $('#add_items_form select[name="unit_select"]').val(),
+      quantity: $('#add_items_form input[name="quantity"]').val() + " " +$('#add_items_form select[name="unit_select"]').val(),
       priority: $('#add_items_form select[name="priority"]').val(),
       store_name: $('#add_items_form input[name="store_name"]').val()
     }
