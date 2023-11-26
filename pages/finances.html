@@ -3,16 +3,23 @@
 .error {
   color:red;
 }
+
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
 .main_container {
-    margin: 10px 10px;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
 
 }
 .finances_container {
     width: 100%;
-    height: 98%;
-    border: 8px solid #F0640A;
+    height: 100%;
+    border: 5px solid #F0640A;
     background-color: #303030;
-    border-radius: 40px;
     color: white;
     padding: 10px;
     margin: 0 auto;
@@ -47,7 +54,7 @@
     color: white;
 }
 
-.current_balance_amount {
+.balance {
     text-align: center;
     font-family:'Times New Roman', Times, serif;
     font-size: 25px;
@@ -61,6 +68,63 @@
     padding-bottom: 20px;
 }
 
+thead {
+    color: white;
+}
+
+.income_table_container {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+
+}
+
+.income_list_table_content {
+    color: white;
+} 
+
+.table_content {
+    color: white;
+}
+
+.income_table {
+  background-color: #424141;
+}
+
+.income_table thead {
+  background-color: #F0640A;
+}
+
+.expense_table_container {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin-top: 50px;
+}
+
+.expense_list_table_content {
+  color: white;
+}
+
+.expense_table {
+  background-color: #424141;
+}
+
+.expense_table thead {
+  background-color: #F0640A;
+}
+
+#chart {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#new_income_btn {
+  background-color: #F0640A !important;
+  color: white !important;
+  border-color: #303030 !important;
+}
+
 
 </style>
 
@@ -69,9 +133,12 @@
 <title>Microon - Finances</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css">
 <link href="../css/styles.css" rel="stylesheet" />
 <link rel="stylesheet" href="../css/spapp.css">
 <script src="https://kit.fontawesome.com/45bb7d0eec.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css">
 
 </head>
 
@@ -84,135 +151,418 @@
         </div>
         <div class="current_balance_container">
             <h3 class="current_balance_title">Current Balance:</h3>
-            <p class="current_balance_amount">$1000.00</p>
+            <p class="balance"><span id="balance">$0</span></p>
         </div>
-        <div class="new_expense_button">
-            <button type="button" class="btn btn-primary" data-toggle="modal" onClick="open_modal_add_income()">New Income</button>
-            <button type="button" class="btn btn-danger" data-toggle="modal" onClick="open_modal_add_expense()">New Expense</button>
+        <div class="new_income_button">
+            <button id="new_income_btn" type="button" class="btn btn-light" data-toggle="modal" onClick="open_modal_new_income()">New Income</button>
+            <button type="button" class="btn btn-danger" data-toggle="modal" onClick="open_modal_new_expense()">New Expense</button>
         </div>
-        <table class="table" style="width:50%">
+
+      <div class="income_table_container">
+        <table class="table income_table" id="income_table">
             <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Type of Expense</th>
-                <th scope="col">Name of Expense</th>
-                <th scope="col">Activity</th>
-                <th scope="col">Balance After Expense</th>
+              <tr class="income_list_table_content">
+                <!-- <th scope="col">#</th> -->
+                <th scope="col">Type of Income</th>
+                <th scope="col">Amount of Income</th>
+                <th scope="col">Date</th>
+                <th scope="col">Time</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Food</td>
-                <td>Restaurant</td>
-                <td>-15.00</td>
-                <td>cifra nakon</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Bills</td>
-                <td>Water</td>
-                <td>-15.00</td>
-                <td>cifra nakon</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Other</td>
-                <td>PC game</td>
-                <td>-15.00</td>
-                <td>cifra nakon</td>
-              </tr>
-              <tr>
-                <th scope="row">4</th>
-                <td>Income</td>
-                <td>Salary</td>
-                <td>-15.00</td>
-                <td>cifra nakon</td>
-              </tr>
+            <tbody id="table_content" class="table_content">
             </tbody>
-          </table>
+        </table>
+      </div>
+
+      <div class="expense_table_container">
+        <table class="table expense_table" id="expense_table">
+          <thead>
+            <tr class="expense_list_table_content">
+              <!-- <th scope="col">#</th> -->
+              <th scope="col">Type of Expense</th>
+              <th scope="col">Amount of Expense</th>
+              <th scope="col">Date</th>
+              <th scope="col">Time</th>
+            </tr>
+          </thead>
+          <tbody id="table_content" class="table_content">
+          </tbody>
+        </table>
+      </div>
+      <div id="chart">
+
+      </div>
     </div>
 </div>
 
-<div class="modal" tabindex="-1" id="test-income">
+<div class="modal" tabindex="-1" id="new_income">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
+      <form id="add_new_income_form">
       <div class="modal-header">
-        <h5 class="modal-title">Add a new income</h5>
+        <h5 class="modal-title">New Income</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="mb-3">
-          <label for="exampleFormControlInput1" class="form-label">Name</label>
-          <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="example: John Doe">
-        </div>
         Type of income
-        <select class="form-select" aria-label="Default select example">
-          <option selected>Select the type of your income</option>
-          <option value="1">Salary</option>
-          <option value="2">Family</option>
-          <option value="3">Other</option>
+        <select class="form-select" id="income_type" name="income_type" aria-label="Default select example" style="margin-bottom: 10px;">
+          <option selected value=" ">Select the type of income</option>
+          <option value="Salary">Salary</option>
+          <option value="Stipend">Stipend</option>
+          <option value="Side Hustle">Side Hustle</option>
+          <option value="Other">Other</option>
         </select>
         Amount
         <div class="input-group mb-3">
-          <span class="input-group-text">$</span>
-          <input type="text" class="form-control" aria-label="Income Amount">
-          <span class="input-group-text"></span>
+          <input type="number" class="form-control" aria-label="Income Amount" id="income_amount" name="income_amount">
+          <span class="input-group-text">BAM</span>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="submit" class="btn btn-primary" id="add_new_income">Add</button>
       </div>
+    </form>
     </div>
   </div>
 </div>
 
-<div class="modal" tabindex="-1" id="test-expense">
+<div class="modal" tabindex="-1" id="new_expense">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
+      <form id="add_new_expense_form">
       <div class="modal-header">
-        <h5 class="modal-title">Add a new expense</h5>
+        <h5 class="modal-title">New Expense</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="mb-3">
-          <label for="exampleFormControlInput1" class="form-label">Name</label>
-          <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="example: John Doe">
-        </div>
-        Type of income
-        <select class="form-select" aria-label="Default select example">
-          <option selected>Select the type of your expense</option>
-          <option value="1">Food</option>
-          <option value="2">Bills</option>
-          <option value="3">Other</option>
+        Type of expense
+        <select class="form-select" id="expense_type" name="expense_type" aria-label="Default select example" style="margin-bottom: 10px;">
+          <option selected value=" ">Select the type of expense</option>
+          <option value="Food">Food</option>
+          <option value="Mortgage/Loans">Mortgage/Loans</option>
+          <option value="Bills">Bills</option>
+          <option value="Insurance">Insurance</option>
+          <option value="Car">Car</option>
+          <option value="Transport">Transport</option>
+          <option value="Medical">Medical</option>
+          <option value="Education">Education</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="Clothes">Clothes</option>
+          <option value="Other">Other</option>
         </select>
         Amount
         <div class="input-group mb-3">
-          <span class="input-group-text">$</span>
-          <input type="text" class="form-control" aria-label="Income Amount">
-          <span class="input-group-text"></span>
+          <input type="number" class="form-control" aria-label="Expense Amount" id="expense_amount" name="expense_amount">
+          <span class="input-group-text">BAM</span>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="submit" class="btn btn-primary" id="add_new_expense">Add</button>
       </div>
+    </form>
     </div>
   </div>
 </div>
+
+
 
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 <script>
-function open_modal_add_income(){
-    $("#test-income").modal("toggle");
+
+function open_modal_new_income(){
+  $("#new_income").modal("toggle");
   }
 
-function open_modal_add_expense(){
-  $("#test-expense").modal("toggle");
+function open_modal_new_expense(){
+  $("#new_expense").modal("toggle");
 }
+
+// const select1 = document.querySelector('#transaction_type');
+// const select2 = document.querySelector('#transaction_name');
+
+// transaction_type.addEventListener('change', () => {
+//   if (transaction_type.value === 'Expense') {
+//     transaction_name.style.display = 'block';
+//   } else {
+//     transaction_name.style.display = 'none';
+//     transaction_name.selectedIndex = 0;
+//   }
+// });
+
+$(document).ready(function() {
+    get_income_list();
+});
+
+$(document).ready(function() {
+    get_expense_list();
+});
+
+//INCOME LIST
+function get_income_list() {
+  $.get('../rest/income_list', function(data) {
+    var dataSet = [];
+    for (var i = 0; i < data.length; i++) {
+      dataSet.push([
+        data[i].income_type,
+        data[i].income_amount,
+        data[i].date,
+        data[i].time,
+      ]);
+    }
+
+    $("#income_table").DataTable({
+      data: dataSet,
+      columns: [
+        {title: "Type of Income"},
+        {title: "Amount of Income"},
+        {title: "Date"},
+        {title: "Time"}
+      ],
+      dom: 'Bfrtip',
+      "pageLength": 10,
+      "lengthMenu": [2, 5, 10, 25, 50, "All"]
+    });
+  })
+}
+
+//EXPENSE LIST
+function get_expense_list() {
+  $.get('../rest/expense_list', function(data) {
+    var dataSet = [];
+    for (var i = 0; i < data.length; i++) {
+      dataSet.push([
+        data[i].expense_type,
+        data[i].expense_amount,
+        data[i].date,
+        data[i].time,
+      ]);
+    }
+
+    $("#expense_table").DataTable({
+      data: dataSet,
+      columns: [
+        {title: "Type of Expense"},
+        {title: "Amount of Expense"},
+        {title: "Date"},
+        {title: "Time"}
+      ],
+      dom: 'Bfrtip',
+      "pageLength": 10,
+      "lengthMenu": [2, 5, 10, 25, 50, "All"]
+    });
+  })
+}
+
+
+$(document).ready(function() {
+  function updateBalance() {
+    var balance = parseFloat($('#balance').text().replace('$', ''));
+    $('#balance').text('$' + balance.toFixed(2));
+    localStorage.setItem('balance', balance.toFixed(2));
+}
+
+//ADDING INCOME
+$('#add_new_income').click(function(event) {
+  var amount = parseFloat($('#income_amount').val());
+
+  if (!isNaN(amount)) {
+    var balance = parseFloat(localStorage.getItem('balance')) || 0; 
+    balance += amount;
+    $('#balance').text('$' + balance.toFixed(2));
+    localStorage.setItem('balance', balance.toFixed(2));
+  }
+});
+
+$("#add_new_income_form").validate({
+
+submitHandler: function(form) {
+  var income = {
+    income_type: $('#add_new_income_form select[name="income_type"]').val(),
+    income_amount: parseFloat($('#add_new_income_form input[name="income_amount"]').val()),
+    date : currentDate,
+    time : currentTime
+  }
+
+  $.post( "../rest/new_income", income ).done(function(data) {
+    toastr.success('You have successfully added your income');
+  }).fail(function(error) {
+    toastr.error(error.responseText)
+  });
+}
+});
+
+  
+  //ADDING EXPENSE
+  $('#add_new_expense').click(function(event) {
+    var amount = parseFloat($('#expense_amount').val());
+
+    if (!isNaN(amount)) {
+      var balance = parseFloat(localStorage.getItem('balance')) || 0;
+      balance -= amount;
+      $('#balance').text('$' + balance.toFixed(2));
+      localStorage.setItem('balance', balance.toFixed(2));
+    }
+  });
+
+  var balance = parseFloat(localStorage.getItem('balance')) || 0;
+  $('#balance').text('$' + balance.toFixed(2));
+});
+
+$("#add_new_expense_form").validate({
+
+submitHandler: function(form) {
+  var expense = {
+    expense_type: $('#add_new_expense_form select[name="expense_type"]').val(),
+    expense_amount: parseFloat($('#add_new_expense_form input[name="expense_amount"]').val()),
+    date : currentDate,
+    time : currentTime
+  }
+
+  $.post( "../rest/new_expense", expense ).done(function(data) {
+    toastr.success('You have successfully added your expense');
+  }).fail(function(error) {
+    toastr.error(error.responseText)
+  });
+}
+});
+
+const date = new Date();
+
+let day = date.getDate();
+let month = date.getMonth() + 1;
+let year = date.getFullYear();
+let hours = date.getHours();
+let minutes = date.getMinutes();
+let seconds = date.getSeconds();
+
+let currentDate = `${day}-${month}-${year}`;
+let currentTime = `${hours}:${minutes}:${seconds}`
+
+// function createPieChart(data) {
+//     var options = {
+//         series: data,
+//         chart: {
+//             width: 380,
+//             type: 'pie',
+//         },
+//         labels: data.map(item => item.x), // Labels will be the income types
+//         responsive: [{
+//             breakpoint: 480,
+//             options: {
+//                 chart: {
+//                     width: 200
+//                 },
+//                 legend: {
+//                     position: 'bottom'
+//                 }
+//             }
+//         }]
+//     };
+
+//     var chart = new ApexCharts(document.querySelector("#chart"), options);
+//     chart.render();
+// }
+
+
+// $(document).ready(function() {
+//     // Fetch income data using AJAX
+//     $.get('../rest/income_list', function(data) {
+//         // Process the data to prepare for the pie chart
+//         var pieChartData = [];
+//         for (var i = 0; i < data.length; i++) {
+//             pieChartData.push({
+//                 x: data[i].income_type,
+//                 y: data[i].income_amount
+//             });
+//         }
+
+//         // Create the pie chart
+//         createPieChart(pieChartData);
+//     });
+// });
+
+
+
+// var options = {
+//           series: [20, 55, 13, 43, 22],
+//           chart: {
+//           width: 380,
+//           type: 'pie',
+//         },
+//         labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+//         responsive: [{
+//           breakpoint: 480,
+//           options: {
+//             chart: {
+//               width: 200
+//             },
+//             legend: {
+//               position: 'bottom'
+//             }
+//           }
+//         }]
+//         };
+
+//         var chart = new ApexCharts(document.querySelector("#chart"), options);
+//         chart.render();
+
+
+// function get_transactions() {
+//   $.get('../rest/finances', function(data) {
+//     var dataSet = [];
+//     for (var i = 0; i < data.length; i++) {
+//       dataSet.push([
+//         data[i].transaction_type,
+//         data[i].transaction_name,
+//         data[i].activity,
+//         data[i].balance
+//       ]);
+//     }
+
+//     $("#finance_table").DataTable({
+//       data: dataSet,
+//       columns: [
+//         {title: "Type of Transaction"},
+//         {title: "Name of Transaction"},
+//         {title: "Activity"},
+//         {title: "Balance After"}
+//       ],
+//       dom: 'Bfrtip',
+//       "pageLength": 10,
+//       "lengthMenu": [2, 5, 10, 25, 50, "All"]
+//     });
+//   })
+// }
+
+
+//NOTE NEW TRANSACTION
+//ToDo figure out how to manage activity and balance on post
+
+// $('#add_new_transaction_form').validate({
+//   submitHandler: function(form) {
+//     var new_transaction = {
+//       transaction_type: $('#add_new_transaction_form select[name="transaction_type"]').val(),
+//       transaction_name: $('#add_new_transaction_form select[name="transaction_name"]').val()
+//     }
+//     $.post( "../rest/new_transaction/", new_transaction ).done(function(data) {
+//       toastr.success('New transaction has been recorded');
+//       $('#finance_table').DataTable().clear().destroy();
+//       get_items();
+//     }).fail(function(error) {
+//       toastr.error(error.responseText);
+//     });
+//   }
+// });
+
 </script>
 </html>

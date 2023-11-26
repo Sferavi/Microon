@@ -21,4 +21,10 @@ class ShoppingListDao extends BaseDao
         return @($this->execute_query($query, ['user_id' => $user_id]));
     }
 
+    public function get_high_priority()
+    {
+        $query = "SELECT * FROM shopping_list WHERE shopping_list.priority LIKE 'High Priority'";
+        return $this->execute_query($query,[]);
+    }
+
 }

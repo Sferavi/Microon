@@ -3,16 +3,23 @@
 .error {
   color:red;
 }
-.main_container {
-    margin: 10px 10px;
 
+body, html {
+  height: 100%;
+  margin: 0;
 }
+
+.main_container {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+}
+
 .birthday_container {
     width: 100%;
-    height: 98%;
-    border: 8px solid #F0640A;
+    height: 100%;
+    border: 5px solid #F0640A;
     background-color: #303030;
-    border-radius: 40px;
     color: white;
     padding: 10px;
     margin: 0 auto;
@@ -26,8 +33,6 @@
     font-size: 72px;
     font-weight: bold;
     color: white;
-    /* text-shadow: 2px 2px 0px #F0640A,
-                 3px 3px 0px white; */
 }
 
 .add_birthday_button {
@@ -37,10 +42,13 @@
 }
 
 .birthday_list_container {
+    display: flex;
+    align-items: center;
+    position: relative;
     overflow: hidden;
     white-space: nowrap;
-    width: 90%;
-    height: 170px;
+    width: 80%;
+    height: 17%;
     border: 4px solid #F0640A;
     border-radius: 40px;
     color: white;
@@ -56,23 +64,54 @@
 
 .birthday_image_container {
   width: 10%;
-  height: inherit;
+  height: 100%;
   border-right: 4px solid #F0640A;
   border-radius: 40px;
   padding-right: 10px;
 }
 
 .birthday_person_information {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 40px;
-  font-weight: bold;
-  color: white;
-  height: inherit;
-  text-align: center;
-  position: absolute;
+ display: flex;
+ flex-direction: row;
+ justify-content: space-between;
+ align-items: center;
+ font-family: Arial, Helvetica, sans-serif;
+ font-size: 40px;
+ font-weight: bold;
+ color: white;
+ padding-left: 50px;
+}
+
+.person_name {
+ display: flex;
+ align-items: center;
+ width: 300px;
+}
+
+.person_birthday {
   display: flex;
-  flex-direction: row;
-  padding-left: 250px;
+  align-items: center;
+  text-align: center;
+}
+
+.person_gift {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.person_affiliation {
+  display: flex;
+  align-items: center;
+}
+
+.person_birthday,
+.person_gift,
+.person_affiliation {
+  width: 200px;
+  margin: 0 50px;
+  flex: 1;
+  text-align: center;
 }
 
 </style>
@@ -246,8 +285,37 @@ function get_birthdays() {
     success: function( data ) {
       document.getElementById('my_birthdays_list').innerHTML = "";
       data.forEach(element => {
-        document.getElementById('my_birthdays_list').innerHTML+='<div class="birthday_list_container"><div class="birthday_image_container">' + element.person_photo + '<div class="birthday_person_information"><div class="person_name" style="padding-top: 50px;">' + element.person_name + '</div><div class="person_birthday" style="padding-right: 200px; padding-left: 200px; padding-top: 50px;">' + element.person_date + '</div><div class="person_gift" style="padding-right: 200px; padding-top: 50px;">' + element.person_gift + '</div><div class="person_affiliation" style="padding-top: 50px;">' + element.person_affiliation + '</div><div class="edit_button"><button type="button" class="btn btn-light" style="margin-top: 59px; margin-left: 300px;" onclick="open_modal_edit_birthday(' + element.id + ')">Edit</button></div><div class="edit_button"><button type="button" class="btn btn-outline-danger" onclick="open_modal_delete_birthday(' + element.id + ')" style="margin-top: 59px; margin-left: 10px;">Delete</button></div></div></div></div></div></div>'
-            
+      document.getElementById('my_birthdays_list').innerHTML +=
+                  '<div class="birthday_list_container">' +
+                  '<div class="birthday_image_container">' +
+                  element.person_photo +
+                  '</div>' +
+                  '<div class="birthday_person_information">' +
+                  '<div class="person_name">' +
+                  element.person_name +
+                  '</div>' +
+                  '<div class="person_birthday">' +
+                  element.person_date +
+                  '</div>' +
+                  '<div class="person_gift">' +
+                  element.person_gift +
+                  '</div>' +
+                  '<div class="person_affiliation">' +
+                  element.person_affiliation +
+                  '</div>' +
+                  '<div class="edit_birthday_button">' +
+                  '<button type="button" class="btn btn-light" onclick="open_modal_edit_birthday(' +
+                  element.id +
+                  ')" style="margin-left: 90px;">Edit</button>' +
+                  '</div>' +
+                  '<div class="delete_birthday_button">' +
+                  '<button type="button" class="btn btn-outline-danger" onclick="open_modal_delete_birthday(' +
+                  element.id +
+                  ')" style="margin-left: 10px;">Delete</button>' +
+                  '</div>' +
+                  '</div>' +
+                  '</div>' +
+                  '</div>';
       });
     },
     error: function(){

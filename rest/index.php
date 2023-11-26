@@ -10,11 +10,15 @@ require_once('dao/UsersDao.class.php');
 require_once('dao/NotesDao.class.php');
 require_once('dao/BirthdaysDao.class.php');
 require_once('dao/ShoppingListDao.class.php');
+require_once('dao/IncomeDao.class.php');
+require_once('dao/ExpenseDao.class.php');
 
 Flight::register('user_dao', 'UsersDao');
 Flight::register('notes_dao', 'NotesDao');
 Flight::register('birthdays_dao', 'BirthdaysDao');
 Flight::register('shopping_list_dao', 'ShoppingListDao');
+Flight::register('income_dao', 'IncomeDao');
+Flight::register('expense_dao', 'ExpenseDao');
 
 Flight::route('POST /users', function () {
     $user = Flight::request()->data->getData();
@@ -55,9 +59,24 @@ Flight::route('POST /shopping_item', function () {
     Flight::shopping_list_dao()->add($shopping_item);
 });
 
+Flight::route('POST /new_income', function () {
+    $new_income           = Flight::request()->data->getData();
+    Flight::income_dao()->add($new_income);
+});
+
+Flight::route('POST /new_expense', function () {
+    $new_expense           = Flight::request()->data->getData();
+    Flight::expense_dao()->add($new_expense);
+});
+
 Flight::route('POST /birthday/@id', function ($id) {
     $birthdays = Flight::request()->data->getData();
     Flight::birthdays_dao()->update_birthday($birthdays, $id);
+});
+
+Flight::route('POST /note/@id', function ($id) {
+    $notes = Flight::request()->data->getData();
+    Flight::notes_dao()->update_note($notes, $id);
 });
 
 Flight::route('GET /my_notes', function () {
@@ -76,13 +95,40 @@ Flight::route('GET /shopping_list', function()
   Flight::json($shopping_list);
 });
 
+Flight::route('GET /income_list', function()
+{
+  $income_list = Flight::income_dao()->get_all();
+  Flight::json($income_list);
+});
+
+Flight::route('GET /expense_list', function()
+{
+  $expense_list = Flight::expense_dao()->get_all();
+  Flight::json($expense_list);
+});
+
+Flight::route('GET /high_priority', function()
+{
+  $shopping_list = Flight::shopping_list_dao()->get_high_priority();
+  Flight::json($shopping_list);
+});
+
 Flight::route('GET /birthday/@id', function ($id) {
     $birthday = Flight::birthdays_dao()->get_birthdays_by_id($id);
     Flight::json($birthday);
 });
 
+Flight::route('GET /note/@id', function ($id) {
+    $note = Flight::notes_dao()->get_notes_by_id($id);
+    Flight::json($note);
+});
+
 Flight::route('DELETE /birthday/@id', function ($id) {
     Flight::birthdays_dao()->delete_birthday($id);
+});
+
+Flight::route('DELETE /note/@id', function ($id) {
+    Flight::notes_dao()->delete_note($id);
 });
 
 Flight::start();
